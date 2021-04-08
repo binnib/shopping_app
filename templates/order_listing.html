@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block css %}
+    .card{
+        border-radius:0px;
+    }
+    .box:hover {
+        box-shadow: 1px 2px 9px rgb(0 0 0 / 30%);
+    }
+    #order-code{
+        font-size:14px;
+    }
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-3">
+        <br><br>
+        <i class="fa fa-chevron-left" aria-hidden="true"></i><a style="text-decoration:none;" href="/myaccount">  Back to My Account</a><br><br>
+        {% if orders %}
+            <h3 class="pseudo_border">My Orders</h3>
+            <br><br>
+            {% for order in orders %}
+                <div class="card mb-3 box" style="height:228px;">
+                    <div class="row g-0">
+                        <div class="col-md-2">
+                            <a href="/product_detail/{{order.getOrderProduct.id}}">
+                                <img
+                                    src="{{order.getOrderProduct.image.url}}"
+                                    alt="..."
+                                    class="" height="226" width="195"
+                                />
+                            </a>
+                        </div>
+                        <div class="col-md-10">
+                            <div class="card-body">
+                                <div style="float: right;">
+                                    <span id="order-code" style="float:right;" class="badge badge-secondary">{{order.order_code}}</span>
+                                </div>
+                                <div class="form-group">
+                                    <label class="heading-label"><span class="badge badge-info">{{product.category.name}}</span></label>
+                                </div>
+                                <h5 class="card-title">{{order.getOrderProduct.name}}({{order.getOrderProduct.quantity}} {{order.getOrderProduct.unit_measure.unit}})<label style="float:right;color:gray;">Order Total({{order.getProductCount}} Items)</label></h5>
+                                <p style="color:rgba(0,0,0,0.6);">
+                                    {% if order.status == "DELIVERED" %}
+                                        <img src="{% static 'images/free-delivery-truck-icon-2049-thumb.png' %}" height="48" width="48" /> <b>{{order.order_delivered_date}}</b>
+                                    {% else %}
+                                        <label></label>
+                                    {% endif %}
+                                    <label style="float:right;" class="heading-label"><b>₹ {{order.total_price}}</b></label>
+                                </p>
+                                {% if order.status == "CONFIRMED" %}
+                                    <span class="badge badge-primary">{{order.status}}</span>
+                                {% elif order.status == "PROCESSING ORDER" %}
+                                    <span class="badge badge-secondary">{{order.status}}</span>
+                                {% elif order.status == "QUALITY CHECK" %}
+                                    <span class="badge badge-warning">{{order.status}}</span>
+                                {% elif order.status == "PRODUCT DISPATCHED" %}
+                                    <span class="badge badge-info">{{order.status}}</span>
+                                {% elif order.status == "DELIVERED" %}
+                                    <span class="badge badge-success">{{order.status}}</span>
+                                {% elif order.status == "ORDER FAILED" %}
+                                    <span class="badge badge-danger">{{order.status}}</span>
+                                {% elif order.status == "ORDER CANCELLED" %}
+                                    <span class="badge badge-danger">{{order.status}}</span>
+                                {% endif %}
+                                <a style="float:right;" class="btn btn-outline-info" href="/order_detail/{{order.order_code}}" role="button">Order Info</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+            {% endfor %}
+        {% else %}
+            <br><br><br>
+            <center><img src="{% static 'images/Empty_cart_icon.jpg' %}" alt="..."></center>
+        {% endif %}
+    </div>
+{% endblock %}

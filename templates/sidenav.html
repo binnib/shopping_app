@@ -1,0 +1,7 @@
+    <div class="col-lg-2 mx-auto">
+        <ul class="list-group">
+            {% for category in categories %}
+                <a class="list-group-item" href="/home?category={{category.name}}" style="text-decoration:none;">{{category.name}}</a>
+            {% endfor %}
+        </ul>
+    </div>

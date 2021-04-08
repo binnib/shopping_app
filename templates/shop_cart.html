@@ -1,0 +1,367 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block css %}
+    .sticky {
+        position: fixed;
+        top: 0;
+        width: 380px;
+        right: 19%;
+    }
+
+    .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+        color: #fff;
+        background-color: gray;
+        border-right: 10px solid #FDD838;
+    }
+
+    a {
+        color: gray;
+        text-decoration: none;
+        background-color: transparent;
+    }
+
+    #exampleModalLabel {
+        width: 100%;
+    }
+
+    #test {
+        float: right;
+    }
+
+    .box:hover {
+        box-shadow: 1px 2px 9px rgb(0 0 0 / 30%);
+    }
+{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <br><br>
+        <i class="fa fa-chevron-left" aria-hidden="true"></i><a style="text-decoration:none;" href="/">  Back to Dashboard</a><br><br>
+        {% if cart_products %}
+            <h3 class="pseudo_border">Cart Items</h3>
+            <br><br>
+            {% comment %} <b>My Cart ({{cart_products_count}})</b> {% endcomment %}
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="card box" style="margin-top:10px;">
+                        <div class="card-body">
+                            <table class="table" style="">
+                                <tbody>
+                                    {% for cart_item in cart_products %}
+                                        <tr>
+                                            <td style="vertical-align: inherit;">
+                                                <a href="/product_detail/{{cart_item.product_id}}"><img src="{{cart_item.product.image.url}}" width="150" height="160" /></a>
+                                            </td>
+                                            <td style="width:90%;">
+                                                <div class="form-group">
+                                                    <label class="heading-label"></label>
+                                                    <p class="display-label"></p>
+                                                </div>
+                                                <p>
+                                                    <span class="badge badge-info">{{cart_item.product.category.name}}</span>
+                                                    <a title="Remove Cart Item" style="float:right;position:relative;right:16px;" href="/remove_cart?cart_item_id={{cart_item.id}}&cart_type=single" onclick="return confirm('Are you sure you want to remove the Item from Cart?')"> <i class="fa fa-times" style="color:red;"></i></a>
+                                                </p>
+                                                <p>{{cart_item.product.name}}
+                                                    {% comment %} <a style="float:right;position:relative;right:16px;" class="bookmark-link" style="" href="/add_to_wishlist/{{product.id}}">
+                                                    {% if product_wishlist.is_favourite == True %}
+                                                        <i class="fa fa-bookmark fa-2x" aria-hidden="true"></i>
+                                                    {% else %}
+                                                        <i class="fa fa-bookmark-o fa-2x" aria-hidden="true"></i>
+                                                    {% endif %}
+                                                    </a> {% endcomment %}
+                                                </p>
+                                                <p>₹ {{cart_item.product.price}}</p>
+                                                
+                                                
+                                                <form id="add-to-cart" method="POST" action="/dynamic_add_to_cart">
+                                                    <button style="margin-right:51%;" type="button" class="btn btn-outline-warning">{{cart_item.product.quantity}} {{cart_item.product.unit_measure.unit}}</button>
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="cart_item_id" value={{cart_item.id}}>
+                                                    <div class="form-check form-check-inline">
+                                                        <a class="btn btn-outline-info qtyminus" field="quantity{{cart_item.id}}" cart-item-id="{{cart_item.id}}" href="#"> <i class="fa fa-minus"></i></a>
+                                                    </div>
+                                                    <div class="form-check form-check-inline" style="width:9%;">
+                                                        <input type="text" name="quantity{{cart_item.id}}" value="{{cart_item.quantity}}" class="form-control qty" aria-label="Username" aria-describedby="basic-addon1" disabled>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <a  class="btn btn-outline-info qtyplus" field="quantity{{cart_item.id}}" cart-item-id="{{cart_item.id}}" href="#"> <i class="fa fa-plus"></i></a>
+                                                    </div>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                                {% comment %} <tr>
+                                    <th class="" colspan=""><h3>Total</h3></th>
+                                    <th style="float:right;">₹ <label id="calculated-total-price">{{calculated_price}}</label></th>
+                                    <th></th>
+                                </tr> {% endcomment %}
+                            </table>
+                            <hr>
+                            <center>
+                                <a onclick="return confirm('Do you want to clear all the Cart Items?')" class="btn btn-outline-danger" href="/remove_cart?cart_type=all" role="button">CLEAR CART</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button data-toggle="modal" data-target="#exampleModal" type="button" class="btn btn-outline-info">CHECKOUT</button>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4" id="wrap">
+                    <div class="card box">
+                        <div class="card-header">
+                            <b>PRICE SUMMARY <span style="float:right;" class="badge badge-danger">Items Count ({{cart_products_count}})</span></b>
+                        </div>
+                        <blockquote class="blockquote mb-0 card-body">
+                            {% comment %} <p>Total MRP (Incl. of taxes) <span style="float:right;">₹ 1699</span></p>
+                            <hr> {% endcomment %}
+                            <p>Delivery Fee <span class="badge badge-success" style="float:right;">FREE</span></p>
+                            {% comment %} <hr>
+                            <p>Bag Discount - <span style="float:right;">₹935</span></p> {% endcomment %}
+                        </blockquote>
+                         <h5 class="card-footer">Total <span  id="calculated-total-price" style="float:right;">₹ {{calculated_price}}</span></h5>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <br><br><br>
+            <center><img src="{% static 'images/empty-cart.png' %}" alt="..."></center>
+        {% endif %}
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document" style="max-width: 930px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Payment <span id="test">Pay ₹ {{calculated_price}}</span></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="bd-example bd-example-tabs">
+                        <div class="row">
+                            <div class="col-4">
+                            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                <a style="margin-bottom:11px;" class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#cash-on-delivery" role="tab" aria-controls="v-pills-home" aria-selected="true">CASH ON DELIVERY</a>
+                                <a style="margin-bottom:11px;" class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#debit-credit" role="tab" aria-controls="v-pills-profile" aria-selected="false">DEBIT/CREDIT CARD</a>
+                                <a style="margin-bottom:11px;" class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#wallet" role="tab" aria-controls="v-pills-messages" aria-selected="false">WALLET</a>
+                                <a style="margin-bottom:11px;" class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#upi" role="tab" aria-controls="v-pills-settings" aria-selected="false">UPI</a>
+                            </div>
+                            </div>
+                            <div class="col-8">
+                                <div class="tab-content" id="v-pills-tabContent">
+                                    <div class="tab-pane fade show active" id="cash-on-delivery" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                                        <div class="card box">
+                                            <blockquote class="blockquote mb-0 card-body">
+                                                <h4><b>Delivery Address</b></h4>
+                                                <hr>
+                                                {% comment %} <p style="float:left;">
+                                                    <b>{{customer.user.first_name}} {{customer.user.last_name}}</b>
+                                                    <span style="margin-left:262px;" class="badge badge-primary">{{address.resident_type}}</span>
+                                                </p> {% endcomment %}
+                                                <div class="form-check form-check-inline">
+                                                    <b>{{customer.user.first_name}} {{customer.user.last_name}}</b>
+                                                </div>
+                                                <div class="form-check form-check-inline" style="width:9%;">
+                                                    <a href="/address_form" class="custom-link" style=""> <i style="font-size: 20px;" class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <span style="" class="badge badge-primary">{{address.resident_type}}</span>
+                                                </div>
+                                                <p title="{{address.address_details}}" class="address" style="float:left;">{{address.address_details}}</p>
+                                                <p style="float:left;">{{address.state}},{{address.city}},{{address.country}} - {{address.pincode}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                                                <p style="float:left;"><b>Landmark:</b> {{address.landmark}}</p>
+                                                <p style="float:left;"><b>Contact Number:</b> {{customer.phone_no}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                                                {% comment %} <p style="float:left;"><a href="/address_form" class="custom-link" style="margin-left:104px;"> <i style="font-size: 20px;" class="fa fa-pencil-square-o" aria-hidden="true"></i></a> &nbsp;&nbsp;</a></p> {% endcomment %}
+                                            </blockquote>
+                                        </div>
+                                        <br>
+                                        <form action="/place_order" method="post"  autocomplete="off">
+                                            {% csrf_token %}
+                                            <div class="form-check">
+                                                <label class="form-check-label" for="flexRadioDefault2" style="margin-right:36px;">
+                                                    Cash On Delivery
+                                                </label>
+                                                <input class="form-check-input" type="radio" name="payment_type" value="CASH" id="flexRadioDefault2" checked>
+                                            </div>
+                                            <br>
+                                            <hr>
+                                            <center><button type="submit" class="btn btn-info">PAY WITH CASH</button></center>
+                                        </form>
+                                    </div>
+                                    <div class="tab-pane fade" id="debit-credit" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                                        <p>DEBIT/CREDIT CARD</p>
+                                    </div>
+                                    <div class="tab-pane fade" id="wallet" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+                                        <p>WALLET</p>
+                                    </div>
+                                    <div class="tab-pane fade" id="upi" role="tabpanel" aria-labelledby="v-pills-settings-tab">
+                                        <p>UPI</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% comment %} <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div> {% endcomment %}
+            </div>
+        </div>
+    </div>
+
+    <br><br><br>
+
+    {% comment %} <div class="container">
+        <div class="border rounded p-4 m-4">
+            <p class="display-4 pl-4 ml-4">Your Cart</p>
+            <hr>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Sno.</th>
+                        <th>Image</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th></th>
+                        <th>Price</th>
+                        <th>Total</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td></td>
+                        <td><img style="height: 80px;" class="rounded-circle" src="{{product.image.url}}" alt=""></td>
+                        <td>{{product.name}}</td>
+                        <td><div class="form-check form-check-inline">
+                            <a  class="btn btn-outline-info" href="#"> <i class="fa fa-minus"></i></a>
+                            </div>
+                            <div class="form-check form-check-inline" style="width:9%;">
+                            <input type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+                            </div>
+                            <div class="form-check form-check-inline">
+                            <a  class="btn btn-outline-info" href="#"> <i class="fa fa-plus"></i></a>
+                            </div>
+                        </td>
+                        <td>X</td>
+                        <td>{{product.price}}</td>
+                        <td>₹ 400</td>
+                        <td><a  class="btn btn-danger" href="#"> <i class="fa fa-times"></i></a></td>
+                    </tr>
+                    
+                </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th colspan="5"></th>
+                        <th class="" colspan="">Total</th>
+                        <th>₹ 160</th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+            <hr>
+            <div class="m-3 p-3">
+                <a href="#" data-toggle="modal" data-target="#exampleModal" class="btn btn-outline-info border rounded  col-lg-3 float-right">Check out</a>
+            </div>
+        </div>
+    </div> {% endcomment %}
+
+    <script>
+        $(document).ready (function(){
+
+            function add_to_cart(quantity, cart_item_id,token,url) {
+                $.ajax({
+                    headers: { "X-CSRFToken": token },
+                    url: url,
+                    type: 'POST',
+                    data: {
+                        'quantity': quantity,'cart_item_id': cart_item_id
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log("success")
+                        $("#calculated-total-price").html("₹ " + data["calculated_price"])
+                    },
+                    error: function (xhr, errmsg, err) {
+                        alert("error")
+                    }
+                });
+            }
+
+            $('.qtyplus').click(function(e){
+                // Stop acting like a button
+                e.preventDefault();
+                // Get the field name
+                fieldName = $(this).attr('field');
+                // Get its current value
+                var currentVal = parseInt($('input[name='+fieldName+']').val());
+                // If is not undefined
+                if (currentVal == 10) {
+                    $('input[name='+fieldName+']').val(currentVal);
+                }
+                else if (!isNaN(currentVal) ) {
+                    // Increment
+                    $('input[name='+fieldName+']').val(currentVal + 1);
+                } 
+                else {
+                    // Otherwise put a 0 there
+                    $('input[name='+fieldName+']').val(0);
+                }
+
+                var quantity = $('input[name='+fieldName+']').val()
+                var cart_item_id = $(this).attr('cart-item-id');
+                var token = '{{csrf_token}}';
+                var url = '/dynamic_add_to_cart';
+
+                add_to_cart(quantity,cart_item_id,token,url)
+
+            });
+            // This button will decrement the value till 0
+            $(".qtyminus").click(function(e) {
+                // Stop acting like a button
+                e.preventDefault();
+                // Get the field name
+                fieldName = $(this).attr('field');
+                // Get its current value
+                var currentVal = parseInt($('input[name='+fieldName+']').val());
+                // If it isn't undefined or its greater than 0
+                if (!isNaN(currentVal) && currentVal > 1) {
+                    // Decrement one
+                    $('input[name='+fieldName+']').val(currentVal - 1);
+                } else {
+                    // Otherwise put a 0 there
+                    $('input[name='+fieldName+']').val(1);
+                }
+
+                var quantity = $('input[name='+fieldName+']').val()
+                var cart_item_id = $(this).attr('cart-item-id');
+                var token = '{{csrf_token}}';
+                var url = '/dynamic_add_to_cart';
+
+                add_to_cart(quantity,cart_item_id,token,url)
+            });
+        });
+
+        window.onscroll = function() {myFunction()};
+
+        var navbar = document.getElementById("wrap");
+        var sticky = navbar.offsetTop;
+
+        function myFunction() {
+            if (window.pageYOffset >= sticky) {
+                navbar.classList.add("sticky")
+            } else {
+                navbar.classList.remove("sticky");
+            }
+        }
+
+    </script>
+
+{% endblock %}

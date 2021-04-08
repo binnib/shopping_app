@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block css %}
+    .card{
+        border-radius:0px;
+    }
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-3">
+        <br><br>
+        <i class="fa fa-chevron-left" aria-hidden="true"></i><a style="text-decoration:none;" href="/">  Back to Dashboard</a><br><br>
+        <h3 class="pseudo_border">My Account</h3>
+        <br><br>
+        <div class="card-columns">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="card-title"><a href="/order_listing" class="custom-link"><img src="{% static 'images/order.png' %}" /> My Orders <i class="fa fa-chevron-right" aria-hidden="true" style="font-size: 21px;"></i></a></h3>
+                </div>
+            </div>
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="card-title"><a href="/address_listing" class="custom-link"><i class="fa fa-address-card" aria-hidden="true"></i>  My Addresses <i class="fa fa-chevron-right" aria-hidden="true" style="font-size: 21px;"></i></a></h3>
+                </div>
+            </div>
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3 class="card-title"><a href="/profile" class="custom-link"><i class="fa fa-user" aria-hidden="true"></i> My Profile <i class="fa fa-chevron-right" aria-hidden="true" style="font-size: 21px;"></i></a></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

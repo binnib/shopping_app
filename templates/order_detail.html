@@ -1,0 +1,353 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block css %}
+    body{margin-top:20px;}
+
+    .steps .step {
+        display: block;
+        width: 100%;
+        margin-bottom: 35px;
+        text-align: center
+    }
+
+    .steps .step .step-icon-wrap {
+        display: block;
+        position: relative;
+        width: 100%;
+        height: 80px;
+        text-align: center
+    }
+
+    .steps .step .step-icon-wrap::before,
+    .steps .step .step-icon-wrap::after {
+        display: block;
+        position: absolute;
+        top: 50%;
+        width: 50%;
+        height: 3px;
+        margin-top: -1px;
+        background-color: #e1e7ec;
+        content: '';
+        z-index: 1
+    }
+
+    .steps .step .step-icon-wrap::before {
+        left: 0
+    }
+
+    .steps .step .step-icon-wrap::after {
+        right: 0
+    }
+
+    .steps .step .step-icon {
+        display: inline-block;
+        position: relative;
+        width: 80px;
+        height: 80px;
+        border: 1px solid #e1e7ec;
+        border-radius: 50%;
+        background-color: #f5f5f5;
+        color: #374250;
+        font-size: 38px;
+        line-height: 81px;
+        z-index: 5
+    }
+
+    .steps .step .step-title {
+        margin-top: 16px;
+        margin-bottom: 0;
+        color: #606975;
+        font-size: 14px;
+        font-weight: 500
+    }
+
+    .steps .step:first-child .step-icon-wrap::before {
+        display: none
+    }
+
+    .steps .step:last-child .step-icon-wrap::after {
+        display: none
+    }
+
+    .steps .step.completed .step-icon-wrap::before,
+    .steps .step.completed .step-icon-wrap::after {
+        background-color: #0da9ef
+    }
+
+    .steps .step.completed .step-icon {
+        border-color: #0da9ef;
+        background-color: #0da9ef;
+        color: #fff
+    }
+
+    @media (max-width: 576px) {
+        .flex-sm-nowrap .step .step-icon-wrap::before,
+        .flex-sm-nowrap .step .step-icon-wrap::after {
+            display: none
+        }
+    }
+
+    @media (max-width: 768px) {
+        .flex-md-nowrap .step .step-icon-wrap::before,
+        .flex-md-nowrap .step .step-icon-wrap::after {
+            display: none
+        }
+    }
+
+    @media (max-width: 991px) {
+        .flex-lg-nowrap .step .step-icon-wrap::before,
+        .flex-lg-nowrap .step .step-icon-wrap::after {
+            display: none
+        }
+    }
+
+    @media (max-width: 1200px) {
+        .flex-xl-nowrap .step .step-icon-wrap::before,
+        .flex-xl-nowrap .step .step-icon-wrap::after {
+            display: none
+        }
+    }
+
+    .bg-faded, .bg-secondary {
+        background-color: #f5f5f5 !important;
+    }
+    
+    .card{
+        border-radius:0px;
+    }
+
+    .box:hover {
+        box-shadow: 1px 2px 9px rgb(0 0 0 / 30%);
+    }
+
+    p{
+        font-size:18px;
+    }
+
+    #order-code{
+        font-size:14px;
+    }
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-3">
+        <br><br>
+        <i class="fa fa-chevron-left" aria-hidden="true"></i><a style="text-decoration:none;" href="/order_listing">  Back to My Orders</a><br><br>
+        <h3 class="pseudo_border">Order Details</h3>
+        <br><br>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card p-3 box">
+                    <blockquote class="blockquote mb-0 card-body">
+                        
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pixeden-stroke-7-icon@1.2.3/pe-icon-7-stroke/dist/pe-icon-7-stroke.min.css">
+                        <div class="container padding-bottom-3x mb-1">
+                            <p><b>Track Order</b><span id="order-code" style="float:right;" class="badge badge-secondary">{{order.order_code}}</span></p>
+                                {% if order.status == 'CONFIRMED' or order.status == 'PROCESSING ORDER' or  order.status == 'QUALITY CHECK' or order.status == 'PRODUCT DISPATCHED' or order.status == 'DELIVERED' %}
+                                    <div class="card mb-3">
+                                        {% comment %} <div class="p-4 text-center text-white text-lg bg-dark rounded-top"><span class="text-uppercase">Tracking Order No - </span><span class="text-medium">AGSVVSHGH272</span></div> {% endcomment %}
+                                        <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between py-3 px-2 bg-secondary">
+                                            <div class="w-100 text-center py-1 px-2"><span class="text-medium">Shipped Via:</span> UPS Ground</div>
+                                            <div class="w-100 text-center py-1 px-2"><span class="text-medium">Status:</span>{{order.status}}</div>
+                                            <div class="w-100 text-center py-1 px-2"><span class="text-medium">Expected Date:</span> SEP 09, 2017</div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="steps d-flex flex-wrap flex-sm-nowrap justify-content-between padding-top-2x padding-bottom-1x">
+                                            <div class="step {% if order.status == 'CONFIRMED' or order.status == 'PROCESSING ORDER' or  order.status == 'QUALITY CHECK' or order.status == 'PRODUCT DISPATCHED' or order.status == 'DELIVERED' %}completed{% endif %}">
+                                                <div class="step-icon-wrap">
+                                                <div class="step-icon"><i class="pe-7s-cart"></i></div>
+                                                </div>
+                                                <h4 class="step-title">Confirmed Order</h4>
+                                            </div>
+                                            <div class="step {% if order.status == 'PROCESSING ORDER' or order.status == 'QUALITY CHECK' or order.status == 'PRODUCT DISPATCHED' or order.status == 'DELIVERED'  %}completed{% endif %}">
+                                                <div class="step-icon-wrap">
+                                                <div class="step-icon"><i class="pe-7s-config"></i></div>
+                                                </div>
+                                                <h4 class="step-title">Processing Order</h4>
+                                            </div>
+                                            <div class="step {% if order.status == 'QUALITY CHECK' or order.status == 'PRODUCT DISPATCHED' or order.status == 'DELIVERED'%}completed{% endif %}">
+                                                <div class="step-icon-wrap">
+                                                <div class="step-icon"><i class="pe-7s-medal"></i></div>
+                                                </div>
+                                                <h4 class="step-title">Quality Check</h4>
+                                            </div>
+                                            <div class="step {% if order.status == 'PRODUCT DISPATCHED' or order.status == 'DELIVERED'%}completed{% endif %}">
+                                                <div class="step-icon-wrap">
+                                                <div class="step-icon"><i class="pe-7s-car"></i></div>
+                                                </div>
+                                                <h4 class="step-title">Product Dispatched</h4>
+                                            </div>
+                                            <div class="step {% if order.status == 'DELIVERED'%}completed{% endif %}">
+                                                <div class="step-icon-wrap">
+                                                <div class="step-icon"><i class="pe-7s-home"></i></div>
+                                                </div>
+                                                <h4 class="step-title">Product Delivered</h4>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="alert alert-info" role="alert">
+                                        <center>Tracking Won't be possible as {{order.status}}</center>
+                                    </div>
+                                {% endif %}
+                                {% comment %} <button style="float:right;width:194px;" type="button" class="btn btn-outline-info">CANCEL</button> {% endcomment %}
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+
+        <br>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card box">
+                    <blockquote class="blockquote mb-0 card-body">
+                        <p><b>Order Status</b> <button style="float:right;" type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#exampleModal">Update Status</button></p>
+                        {% if order.status == "DELIVERED" %}
+                            <p><span class="badge badge-success">{{order.status}}</span></p>
+                            <p>Delivered on {{order.order_delivered_date}}</p>
+                        {% endif %}
+                        {% if order.status == "CONFIRMED" %}
+                            <span class="badge badge-primary">{{order.status}}</span>
+                        {% elif order.status == "PROCESSING ORDER" %}
+                            <span class="badge badge-secondary">{{order.status}}</span>
+                        {% elif order.status == "QUALITY CHECK" %}
+                            <span class="badge badge-warning">{{order.status}}</span>
+                        {% elif order.status == "PRODUCT DISPATCHED" %}
+                            <span class="badge badge-info">{{order.status}}</span>
+                        {% elif order.status == "ORDER FAILED" %}
+                            <span class="badge badge-danger">{{order.status}}</span>
+                        {% elif order.status == "ORDER CANCELLED" %}
+                            <span class="badge badge-danger">{{order.status}}</span>
+                        {% endif %}
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="card box">
+                    <blockquote class="blockquote mb-0 card-body">
+                        <h4><b>Delivery Address</b></h4>
+                        <hr>
+                        {% comment %} <p style="float:left;">
+                            <b>{{customer.user.first_name}} {{customer.user.last_name}}</b><a href="/address_form" class="custom-link" style=""> <i style="font-size: 20px;" class="fa fa-pencil-square-o" aria-hidden="true"></i></a> &nbsp;&nbsp;</a>
+                            <span style="margin-left:89px;" class="badge badge-primary">{{address.resident_type}}</span>
+                        </p> {% endcomment %}
+
+                        <div class="form-check form-check-inline">
+                            <b>{{customer.user.first_name}} {{customer.user.last_name}}</b>
+                        </div>
+                        <div class="form-check form-check-inline" style="width:9%;">
+                            <a href="/address_form" class="custom-link" style=""> <i style="font-size: 20px;" class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <span style="" class="badge badge-primary">{{address.resident_type}}</span>
+                        </div>
+                        <p title="{{address.address_details}}" class="address" style="float:left;margin-top:10px;">{{address.address_details}}</p>
+                        <p style="float:left;">{{address.state}},{{address.city}},{{address.country}} - {{address.pincode}} </p>
+                        <p style="float:left;"><b>Landmark:</b> {{address.landmark}}</p>
+                        <p style="float:left;"><b>Contact Number:</b> {{customer.phone_no}}</p>
+                        {% comment %} <p style="float:left;"><a href="/address_form" class="custom-link" style="margin-left:104px;"> <i style="font-size: 20px;" class="fa fa-pencil-square-o" aria-hidden="true"></i></a> &nbsp;&nbsp;</a></p> {% endcomment %}
+                    </blockquote>
+                </div>
+                <br>
+                <div class="card box">
+                    <blockquote class="blockquote mb-0 card-body">
+                        <p><b>Order Details</b></p>
+                        <hr>
+                        <p><b>Name:-</b> <span>{{customer.user.first_name}} {{customer.user.last_name}}</span></p>
+                        <hr>
+                        <p><b>Order Number:-</b> <span>{{order.order_code}}</span></p>
+                        <hr>
+                        <p><b>Order Date:-</b> <span>{{order.order_date}}</span></p>
+                        <hr>
+                        <p><b>Order Amount:-</b> <span>₹ {{order.total_price}}</span></p>
+                        <hr>
+                        <p><b>Payment Mode:-</b> <span>{{order.payment_type}}</span></p>
+                    </blockquote>
+                </div>
+            </div>
+            
+            <div class="col-sm-8">
+                <div class="card p-3 box">
+                    <blockquote class="blockquote mb-0 card-body">
+                        <p><b>Order Items ({{order.getProductCount}})</b><span style="float:right;"><b>Amount Paid:- ₹ {{order.total_price}}</b></span></p>
+                        <table class="table" style="">
+                        <tbody>
+                            {% for cart_item in cart_items %}
+                                <tr>
+                                    <td style="vertical-align: inherit;">
+                                        <a href="/product_detail/{{cart_item.product_id}}"><img src="{{cart_item.product.image.url}}" width="150" height="190" /></a>
+                                    </td>
+                                    <td style="width:90%;">
+                                        <div class="form-group">
+                                            <p class="display-label"></p>
+                                        </div>
+                                        <p>
+                                            <span class="badge badge-info">{{cart_item.product.category.name}}</span>
+                                            {% comment %} <a title="Remove Cart Item" style="float:right;position:relative;right:16px;" href="/remove_cart?cart_item_id={{cart_item.id}}&cart_type=single" onclick="return confirm('Are you sure you want to remove the Item from Cart?')"> <i class="fa fa-times" style="color:red;"></i></a> {% endcomment %}
+                                        </p>
+                                        <p>Potato</p>
+                                        <p><button title="Available In" type="button" class="btn btn-outline-warning">{{cart_item.product.quantity}} {{cart_item.product.unit_measure.unit}}</button></p>
+                                        <p>₹ {{cart_item.product.price}} x {{cart_item.quantity}}</p>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                        {% comment %} <tr>
+                            <th class="" colspan=""><h3>Total</h3></th>
+                            <th style="float:right;">₹ <label id="calculated-total-price">{{order.total_price}}</label></th>
+                            <th></th>
+                        </tr> {% endcomment %}
+                    </table>
+                    </blockquote>
+                </div>
+            </div>
+        </div>        
+    </div>
+    <br><br><br>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"><b>Update Order Status</b></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="/update_status" method="post"  autocomplete="off">
+                {% csrf_token %}
+                <input type="hidden" name="order_code" value={{order.order_code}}>
+                <div class="modal-body">
+                    <div class="form-group col-md-12">
+                        <label for="inputState">Order Status</label>
+                        <select name="status" class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref" required>
+                            <option {% if order.status == ''%}selected{% endif %} value="">Select Order Status</option>
+                            <option {% if order.status == 'CONFIRMED'%}selected{% endif %} value="CONFIRMED">Confirmed Order</option>
+                            <option {% if order.status == 'PROCESSING ORDER'%}selected{% endif %} value="PROCESSING ORDER">Processing Order</option>
+                            <option {% if order.status == 'QUALITY CHECK'%}selected{% endif %} value="QUALITY CHECK">Quality Check</option>
+                            <option {% if order.status == 'PRODUCT DISPATCHED'%}selected{% endif %} value="PRODUCT DISPATCHED">Product Dispatched</option>
+                            <option {% if order.status == 'DELIVERED'%}selected{% endif %} value="DELIVERED">Product Delivered</option>
+                            <option {% if order.status == 'ORDER FAILED'%}selected{% endif %} value="ORDER FAILED">Order Failed</option>
+                            <option {% if order.status == 'ORDER CANCELLED'%}selected{% endif %} value="ORDER CANCELLED">Order Cancelled</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button style="position: relative;right: 46%;" type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <br><br><br>
+{% endblock %}

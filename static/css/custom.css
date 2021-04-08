@@ -1,0 +1,20 @@
+.pseudo_border {
+    position:relative;
+    display:inline-block;
+
+}
+.pseudo_border:after {
+    content:'';
+    position:absolute;
+    left:0;right:0;
+    top:85%;
+    margin: 10px auto;
+    width:55%;
+    height:6px;
+    background:#FDD838;
+}
+
+.custom-link {
+    color: #212529;
+    text-decoration: none;
+}

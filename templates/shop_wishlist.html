@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+    <div class="container">
+        <br><br>
+        <i class="fa fa-chevron-left" aria-hidden="true"></i><a style="text-decoration:none;" href="/">  Back to Dashboard</a><br><br>
+        {% if wishlist_products %}
+            <div class="border rounded p-4 m-4">
+                <p class="display-4 pl-4 ml-4">Product Wishlist</p>
+                <hr>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Image</th>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for wishlist_product in wishlist_products %}
+                            <tr>
+                                <td><a class="btn btn-danger" href="/remove_wishlist/{{wishlist_product.id}}"> <i class="fa fa-times"></i></a></td>
+                                <td><a href="/product_detail/{{wishlist_product.product_id}}"><img style="height: 80px;" class="rounded-circle" src="{{wishlist_product.product.image.url}}" alt=""></a></td>
+                                <td>{{wishlist_product.product.name}}</td>
+                                <td>₹ {{wishlist_product.product.price}}</td>
+                                {% comment %} <td><button type="button" class="btn btn-outline-warning">ADD To Cart</button></td> {% endcomment %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <br><br><br><br><br><br><br><br>
+            <center><img src="{% static 'images/empty_wishlist.png' %}" alt="..."></center>
+        {% endif %}
+    </div>
+
+{% endblock %}

@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block css %}
+    .box {
+        transition: box-shadow .3s;
+        border-radius:10px;
+        border: 1px solid #ccc;
+        background: #fff;
+        float: left;
+        border-radius:0;
+    }
+    .box:hover {
+        box-shadow: 0 0 11px rgba(33,33,33,.2); 
+    }
+{% endblock %}
+{% block content %}
+
+    <div class="container-fluid mt-3">
+
+        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner" style="height:555px;">
+                <div class="carousel-item active">
+                <img src="https://images.pexels.com/photos/616404/pexels-photo-616404.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=555&w=1803" class="d-block w-100" alt="...">
+                </div>
+                <div class="carousel-item">
+                <img src="https://images.pexels.com/photos/1414651/pexels-photo-1414651.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=555&w=1803" class="d-block w-100" alt="...">
+                </div>
+                <div class="carousel-item">
+                <img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=555&w=1803" class="d-block w-100" alt="...">
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+
+        {% if user.is_staff == True %}
+            <br>
+            <div class="col-sm-5 offset-sm-2">
+                <a class="btn btn-primary" href="/addandshow" role="button">ADD Product</a>
+                <a class="btn btn-primary" href="/add_category" role="button">ADD Category</a>
+            </div>
+        {% endif %}
+        <br>
+        <div class="row">
+
+            {% include "sidenav.html" %}
+            
+            <div class="col-10">
+                {% if products %}
+                    <div class="row mx-auto">
+                        {% for product in products %}
+                            <div class="card mx-auto mb-3 box" style="max-width: 18rem;">
+                                {% comment %} <div class="card-header bg-transparent border-success">Apple</div> {% endcomment %}
+                                    <div class="card-body">
+                                        <a href="/product_detail/{{product.id}}" style="text-decoration: none;"><img src="{{ product.image.url}}" alt="Denim Jeans" height="300" width="200" ></a>
+                                        <center><h5 class="card-title">{{product.name}}</h5></center>
+                                        <center><p class="price">Rs {{product.price}}</p></center>
+                                    </div>
+                                <div class="card-footer bg-transparent">
+                                    {% comment %} <div class="input-group mb-3" style="width:105px;">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">Qty</span>
+                                        </div>
+                                        <input type="text" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+                                        <button type="button" class="btn btn-warning" style="position: absolute;left: 153%;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                                                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"></path>
+                                            </svg>
+                                        </button>
+                                    </div> {% endcomment %}
+                                    <form action="/add_to_cart" method="post"  autocomplete="off">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="product_id" value={{product.id}}>
+                                        {% comment %} {{ product.CartItemExist }} {% endcomment %}
+                                        {% if product.cart_item %}
+                                            <center><button style="width:194px;" type="submit" class="btn btn-outline-success">GO TO CART</button></center>
+                                        {% else %}
+                                            <center><button style="width:194px;" type="submit" class="btn btn-outline-success">ADD TO CART</button></center>
+                                        {% endif %}
+                                    </form>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="card form-group" style="margin-top:10px;">
+                        <div class="card-body">
+                            <center><img src="https://www.chococherri.com/public/img/no.png" alt="..."></center>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <br>
+
+                {% comment %} <div class="row mx-auto">
+                    <div class="card mx-auto border-success mb-3" style="max-width: 18rem;">
+                        <div class="card-header bg-transparent border-success">Header</div>
+                            <div class="card-body text-success">
+                                <h5 class="card-title">Success card title</h5>
+                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            </div>
+                        <div class="card-footer bg-transparent border-success">Footer</div>
+                    </div>
+                    <div class="card mx-auto border-success mb-3" style="max-width: 18rem;">
+                        <div class="card-header bg-transparent border-success">Header</div>
+                            <div class="card-body text-success">
+                                <h5 class="card-title">Success card title</h5>
+                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            </div>
+                        <div class="card-footer bg-transparent border-success">Footer</div>
+                    </div>
+                    <div class="card mx-auto border-success mb-3" style="max-width: 18rem;">
+                        <div class="card-header bg-transparent border-success">Header</div>
+                            <div class="card-body text-success">
+                                <h5 class="card-title">Success card title</h5>
+                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            </div>
+                        <div class="card-footer bg-transparent border-success">Footer</div>
+                    </div>
+                    <div class="card mx-auto border-success mb-3" style="max-width: 18rem;">
+                        <div class="card-header bg-transparent border-success">Header</div>
+                            <div class="card-body text-success">
+                                <h5 class="card-title">Success card title</h5>
+                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            </div>
+                        <div class="card-footer bg-transparent border-success">Footer</div>
+                    </div>
+                    <div class="card mx-auto border-success mb-3" style="max-width: 18rem;">
+                        <div class="card-header bg-transparent border-success">Header</div>
+                            <div class="card-body text-success">
+                                <h5 class="card-title">Success card title</h5>
+                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            </div>
+                        <div class="card-footer bg-transparent border-success">Footer</div>
+                    </div>
+                </div> {% endcomment %}
+                
+            </div>
+        </div>
+        
+    </div>
+
+{% endblock %}

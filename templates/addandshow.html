@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container mt-3">
+        <br><br>
+        <h3 class="pseudo_border">Post New Product</h3>
+        <br><br>
+        <div class="card" style="margin-top:10px;">
+            <div class="card-body">
+                {% comment %} <form action="" method="post"  autocomplete="off" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{form.as_p}}
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+                    <br>
+                </form> {% endcomment %}
+                <form action="" method="post"  autocomplete="off" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputEmail4">Name</label>
+                            {{form.name}}
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="inputPassword4">Price</label>
+                            {{form.price}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputAddress">Description</label>
+                        {{form.description}}
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="inputState">Category</label>
+                            {{form.category}}
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="inputState">Qty</label>
+                            <input type="text" class="form-control" id="validationServer05">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="inputState">Unit Measure</label>
+                            {{form.unit_measure}}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="invalidCheck3">
+                                <label class="form-check-label" for="invalidCheck3">
+                                    Is Active?
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="invalidCheck4">
+                                <label class="form-check-label" for="invalidCheck4">
+                                    In Stock?
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleFormControlFile1">Product Image</label>
+                        {{form.image}}
+                    </div>
+                    <hr>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
